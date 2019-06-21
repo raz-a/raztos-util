@@ -8,3 +8,9 @@ pub mod critical_section;
 
 /// Contains functionality to atomically access and modify data.
 pub mod atomic;
+
+/// Contains lock structures.
+pub mod lock;
+
+/// Contains semaphore structures to represent resource allocation.
+pub mod semaphore;
