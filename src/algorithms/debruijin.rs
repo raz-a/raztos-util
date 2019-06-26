@@ -165,7 +165,8 @@ pub fn get_lowest_set_bit(value: usize) -> usize {
 ///
 /// # Note
 ///
-/// If the input value is 0. This function will return 0.
+/// If the input value is 0. This function will return N-1 where
+/// N is the number of bits in a `usize`.
 ///
 pub fn get_highest_set_bit(value: usize) -> usize {
     let bits_of = core::mem::size_of::<usize>() * 8;
