@@ -46,7 +46,7 @@ impl FastBitField for SmallBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, SmallBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, SmallBitField};
     ///
     /// assert_eq!(SmallBitField::get_number_of_bits(), core::mem::size_of::<usize>() * 8);
     /// ```
@@ -81,7 +81,7 @@ impl FastBitField for SmallBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, SmallBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, SmallBitField};
     ///
     /// let mut small = SmallBitField::new();
     /// small.clear_field(core::usize::MAX);
@@ -109,7 +109,7 @@ impl FastBitField for SmallBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, SmallBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, SmallBitField};
     ///
     /// let mut small = SmallBitField::new();
     /// small.clear_field(core::usize::MAX);
@@ -142,7 +142,7 @@ impl FastBitField for SmallBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, SmallBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, SmallBitField};
     ///
     /// let mut small = SmallBitField::new();
     /// small.clear_field(core::usize::MAX);
@@ -175,7 +175,7 @@ impl FastBitField for SmallBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, SmallBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, SmallBitField};
     ///
     /// let mut small = SmallBitField::new();
     /// small.clear_field(core::usize::MAX);
@@ -199,7 +199,7 @@ impl FastBitField for SmallBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, SmallBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, SmallBitField};
     ///
     /// let mut small = SmallBitField::new();
     /// small.clear_field(core::usize::MAX);
@@ -225,7 +225,7 @@ impl FastBitField for SmallBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, SmallBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, SmallBitField};
     ///
     /// let mut small = SmallBitField::new();
     /// small.clear_field(core::usize::MAX);
@@ -279,7 +279,7 @@ impl FastBitField for SmallBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, SmallBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, SmallBitField};
     ///
     /// let mut small = SmallBitField::new();
     /// small.clear_field(core::usize::MAX);

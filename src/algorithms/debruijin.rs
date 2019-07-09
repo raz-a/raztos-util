@@ -133,6 +133,8 @@ fn get_lowest_set_bit_64(value: u64) -> u64 {
 /// # Examples
 ///
 /// ```
+/// use raztos_util::algorithms::debruijin;
+///
 /// let result = debruijin::get_lowest_set_bit(5);
 /// assert_eq!(result, 0);
 ///```
@@ -159,6 +161,8 @@ pub fn get_lowest_set_bit(value: usize) -> usize {
 /// # Examples
 ///
 /// ```
+/// use raztos_util::algorithms::debruijin;
+///
 /// let result = debruijin::get_highest_set_bit(5);
 /// assert_eq!(result, 2);
 ///```

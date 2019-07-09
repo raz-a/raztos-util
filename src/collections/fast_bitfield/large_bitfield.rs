@@ -31,7 +31,7 @@ impl LargeBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, LargeBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, LargeBitField};
     /// const BITS_OF: usize = core::mem::size_of::<usize>() * 8;
     ///
     /// let mut large = LargeBitField::new();
@@ -151,7 +151,7 @@ impl LargeBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, LargeBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, LargeBitField};
     /// const BITS_OF: usize = core::mem::size_of::<usize>() * 8;
     ///
     /// let mut large = LargeBitField::new();
@@ -237,7 +237,7 @@ impl FastBitField for LargeBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, LargeBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, LargeBitField};
     ///
     /// let bits_of = core::mem::size_of::<usize>() * 8;
     /// assert_eq!(LargeBitField::get_number_of_bits(), bits_of * bits_of);
@@ -291,7 +291,7 @@ impl FastBitField for LargeBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, LargeBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, LargeBitField};
     /// const BITS_OF: usize = core::mem::size_of::<usize>() * 8;
     ///
     /// let mut large = LargeBitField::new();
@@ -321,7 +321,7 @@ impl FastBitField for LargeBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, LargeBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, LargeBitField};
     /// const BITS_OF: usize = core::mem::size_of::<usize>() * 8;
     ///
     /// let mut large = LargeBitField::new();
@@ -356,7 +356,7 @@ impl FastBitField for LargeBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, LargeBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, LargeBitField};
     /// const BITS_OF: usize = core::mem::size_of::<usize>() * 8;
     ///
     /// let mut large = LargeBitField::new();
@@ -391,7 +391,7 @@ impl FastBitField for LargeBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, LargeBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, LargeBitField};
     ///
     /// const BITS_OF: usize = core::mem::size_of::<usize>() * 8;
     ///
@@ -420,7 +420,7 @@ impl FastBitField for LargeBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, LargeBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, LargeBitField};
     /// const BITS_OF: usize = core::mem::size_of::<usize>() * 8;
     ///
     /// let mut large = LargeBitField::new();
@@ -458,7 +458,7 @@ impl FastBitField for LargeBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, LargeBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, LargeBitField};
     /// const BITS_OF: usize = core::mem::size_of::<usize>() * 8;
     ///
     /// let mut large = LargeBitField::new();
@@ -541,7 +541,7 @@ impl FastBitField for LargeBitField {
     ///
     /// # Examples
     /// ```
-    /// use fast_bitfield::{FastBitField, LargeBitField};
+    /// use raztos_util::collections::fast_bitfield::{FastBitField, LargeBitField};
     /// const BITS_OF: usize = core::mem::size_of::<usize>() * 8;
     ///
     /// let mut large = LargeBitField::new();
