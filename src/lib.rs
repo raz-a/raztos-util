@@ -18,6 +18,7 @@
 //! This crate is used by RazTOS as a foundational library.
 
 #![cfg_attr(not(test), no_std)]
+#![feature(allocator_api)]
 
 pub mod algorithms;
 

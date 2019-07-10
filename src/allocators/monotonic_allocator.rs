@@ -11,12 +11,43 @@
 //! wasted on frees, but gives a realtime guarantee on allocation time.
 //!
 
-use core::alloc::{GlobalAlloc, Layout};
+use core::alloc::{GlobalAlloc, Alloc, Layout, AllocErr};
 use core::cell::UnsafeCell;
+use core::ptr::NonNull;
 
 /// Defines the structure and GlobalAlloc interface for the Monotonic Allocator.
 /// This type is not thread-safe.
 pub struct MonotonicAllocator<'a>(UnsafeCell<MonotonicAllocatorInternal<'a>>);
+
+/// Implements the functionality unique to `MonotonicAllocatorInternal`.
+impl<'a> MonotonicAllocatorInternal<'a> {
+
+    /// Allocates memory from the MonotonicAllocator.
+    ///
+    /// # Arguments
+    /// layout - provides the memory layout for the requested allocation.
+    ///
+    /// # Returns
+    /// A pointer to the allocated memory if successful.
+    /// A null_mut if the allocator doesn't have enough memory or the layout is incompatible with
+    ///  the allocator.
+    ///
+    /// # Unsafe
+    /// This function can return a null pointer, a caller must be responsible for handling a null
+    /// case.
+    unsafe fn alloc_memory(&mut self, layout: Layout) -> *mut u8 {
+        let align_mask = layout.align() - 1;
+        let aligned_index = (self.free_index + align_mask) & !align_mask;
+
+        if (self.heap.len() - aligned_index) >= layout.size() {
+            let out_ptr = self.heap.get_unchecked_mut(aligned_index);
+            self.free_index = aligned_index;
+            return out_ptr;
+        }
+
+        core::ptr::null_mut()
+    }
+}
 
 struct MonotonicAllocatorInternal<'a> {
 
@@ -49,7 +80,7 @@ impl<'a> MonotonicAllocator<'a> {
         );
 
         //
-        // Zero backing memory
+        // Zero the backing memory
         //
 
         let internal = &mut *allocator.0.get();
@@ -91,17 +122,7 @@ unsafe impl<'a> GlobalAlloc for MonotonicAllocator<'a> {
     /// case.
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
         let internal = &mut *self.0.get();
-
-        let align_mask = layout.align() - 1;
-        let aligned_index = (internal.free_index + align_mask) & !align_mask;
-
-        if (internal.heap.len() - aligned_index) >= layout.size() {
-            let out_ptr = internal.heap.get_unchecked_mut(aligned_index);
-            internal.free_index = aligned_index;
-            return out_ptr;
-        }
-
-        core::ptr::null_mut()
+        internal.alloc_memory(layout)
     }
 
     /// Frees memory to the MonotonicAllocator.
@@ -116,4 +137,28 @@ unsafe impl<'a> GlobalAlloc for MonotonicAllocator<'a> {
     /// The caller is responsible for providing a pointer to memory provided by this allocator's
     /// `alloc()` function.
     unsafe fn dealloc(&self, _ptr: *mut u8, _layout: Layout) {}
+}
+
+/// Implements the `Alloc` trait for `MonotonicAllocator`
+///
+/// # Unsafe
+/// Allocators are inherently unsafe.
+unsafe impl<'a> Alloc for MonotonicAllocator<'a> {
+    unsafe fn alloc(&mut self, layout: Layout) -> Result<NonNull<u8>, AllocErr> {
+        let internal = &mut *self.0.get();
+        NonNull::new(internal.alloc_memory(layout)).ok_or(AllocErr)
+    }
+
+    /// Frees memory to the MonotonicAllocator.
+    ///
+    /// # Arguments
+    /// _ptr - \[Unused\] The pointer to the memory to free.
+    ///
+    /// _layout - \[Unused\] The layout of the memory to free.
+    ///
+    /// # Unsafe
+    /// This function does not check for the vailidity of the pointer passed in.
+    /// The caller is responsible for providing a pointer to memory provided by this allocator's
+    /// `alloc()` function.
+    unsafe fn dealloc(&mut self, _ptr: NonNull<u8>, _layout: Layout) {}
 }
