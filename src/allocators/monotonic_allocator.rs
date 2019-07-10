@@ -15,9 +15,20 @@ use core::alloc::{GlobalAlloc, Alloc, Layout, AllocErr};
 use core::cell::UnsafeCell;
 use core::ptr::NonNull;
 
-/// Defines the structure and GlobalAlloc interface for the Monotonic Allocator.
+/// Defines the structure for the Monotonic Allocator.
 /// This type is not thread-safe.
-pub struct MonotonicAllocator<'a>(UnsafeCell<MonotonicAllocatorInternal<'a>>);
+pub struct MonotonicAllocator<'a> (
+    UnsafeCell<MonotonicAllocatorInternal<'a>>
+);
+
+struct MonotonicAllocatorInternal<'a> {
+
+    /// The heap memory to be given out.
+    heap: &'a mut [u8],
+
+    /// Pointer to the next free `u8` in the heap.
+    free_index: usize
+}
 
 /// Implements the functionality unique to `MonotonicAllocatorInternal`.
 impl<'a> MonotonicAllocatorInternal<'a> {
@@ -47,15 +58,6 @@ impl<'a> MonotonicAllocatorInternal<'a> {
 
         core::ptr::null_mut()
     }
-}
-
-struct MonotonicAllocatorInternal<'a> {
-
-    /// The heap memory to be given out.
-    heap: &'a mut [u8],
-
-    /// Pointer to the next free `u8` in the heap.
-    free_index: usize
 }
 
 /// Implements the functionality unique to `MonotonicAllocator`.
