@@ -67,13 +67,22 @@ impl<'a> MonotonicAllocator<'a> {
     ///
     /// # Arguments
     /// backing_memory - The caller provided memory to be used for allocation.
-    ///
-    /// # Unsafe
-    /// The caller is responsible for providing backing memory that is size aligned.
+    /// Note: The caller is responsible for providing backing memory that is size aligned.
     ///
     /// # Returns
-    /// A MonotonicAllocator struct.
-    pub unsafe fn new(backing_memory: &'a mut [u8]) -> Self {
+    /// A MonotonicAllocator struct if the provided memory block is valid, otherwise `None`.
+    pub fn new(backing_memory: &'a mut [u8]) -> Option<Self> {
+
+        //
+        // Verify Alignment
+        //
+
+        let memory_ptr_value = backing_memory.as_mut_ptr() as usize;
+        let desired_alignment = backing_memory.len().next_power_of_two();
+        if memory_ptr_value & (desired_alignment - 1) != 0 {
+            return None;
+        }
+
         let allocator = MonotonicAllocator (
             UnsafeCell::new(MonotonicAllocatorInternal {
                 heap: backing_memory,
@@ -85,12 +94,12 @@ impl<'a> MonotonicAllocator<'a> {
         // Zero the backing memory
         //
 
-        let internal = &mut *allocator.0.get();
+        let internal = unsafe { &mut *allocator.0.get() };
         for i in internal.heap.iter_mut() {
             *i = 0;
         }
 
-        allocator
+        Some(allocator)
     }
 
     /// Determines the ammount of free space remaining in the allocator.
