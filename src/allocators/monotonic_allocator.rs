@@ -50,10 +50,12 @@ impl<'a> MonotonicAllocatorInternal<'a> {
         let align_mask = layout.align() - 1;
         let aligned_index = (self.free_index + align_mask) & !align_mask;
 
-        if (self.heap.len() - aligned_index) >= layout.size() {
-            let out_ptr = self.heap.get_unchecked_mut(aligned_index);
-            self.free_index = aligned_index;
-            return out_ptr;
+        if layout.size() != 0 {
+            if (self.heap.len() - aligned_index) >= layout.size() {
+                let out_ptr = self.heap.get_unchecked_mut(aligned_index);
+                self.free_index = aligned_index;
+                return out_ptr;
+            }
         }
 
         core::ptr::null_mut()
@@ -172,4 +174,50 @@ unsafe impl<'a> Alloc for MonotonicAllocator<'a> {
     /// The caller is responsible for providing a pointer to memory provided by this allocator's
     /// `alloc()` function.
     unsafe fn dealloc(&mut self, _ptr: NonNull<u8>, _layout: Layout) {}
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const SIZE_4K: usize = 0x1000;
+
+    #[repr(align(0x1000))]
+    struct AlignedBackingMemory([u8; SIZE_4K]);
+
+    #[test]
+    fn unaligned_backing_memory_fails_initialization() {
+        let mut backing_memory: [u8; SIZE_4K] = [0; SIZE_4K];
+        let allocator = MonotonicAllocator::new(&mut backing_memory[..]);
+        assert!(allocator.is_none());
+    }
+
+    #[test]
+    fn aligned_backing_memory_succeeds() {
+
+        let mut backing_memory = AlignedBackingMemory([0; SIZE_4K]);
+        let allocator = MonotonicAllocator::new(&mut backing_memory.0[..]);
+        assert!(allocator.is_some());
+    }
+
+    #[test]
+    fn zero_sized_allocation_fails() {
+        let mut backing_memory = AlignedBackingMemory([0; SIZE_4K]);
+        let allocator = MonotonicAllocator::new(&mut backing_memory.0[..]);
+        let mut allocator = allocator.unwrap();
+
+        unsafe {
+            let zero_sized = Layout::from_size_align_unchecked(0, 2);
+            let internal = &mut *allocator.0.get();
+            let original_free_index = internal.free_index;
+
+            let alloc_result = Alloc::alloc(&mut allocator, zero_sized);
+            assert!(alloc_result.is_err());
+            assert_eq!(internal.free_index, original_free_index);
+
+            let global_alloc_result = GlobalAlloc::alloc(&allocator, zero_sized);
+            assert_eq!(global_alloc_result,core::ptr::null_mut());
+            assert_eq!(internal.free_index, original_free_index);
+        }
+    }
 }
